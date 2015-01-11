@@ -15,6 +15,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A reporter which periodically appends data from each metric to a metric-specific CSV file in
  * an output directory.
@@ -22,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class CsvReporter extends AbstractPollingReporter implements
                                                          MetricProcessor<CsvReporter.Context> {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CsvReporter.class);
     /**
      * Enables the CSV reporter for the default metrics registry, and causes it to write to files in
      * {@code outputDir} with the specified period.
@@ -134,7 +138,7 @@ public class CsvReporter extends AbstractPollingReporter implements
      * @throws IOException if there is an error opening the stream
      */
     protected PrintStream createStreamForMetric(MetricName metricName) throws IOException {
-        final File newFile = new File(outputDir, metricName.getName() + ".csv");
+        final File newFile = new File(outputDir, metricName.toString() + ".csv");
         if (newFile.createNewFile()) {
             return new PrintStream(new FileOutputStream(newFile));
         }
